@@ -1,13 +1,19 @@
-import openai
+from openai import OpenAI
+
 import streamlit as st
 import requests
 import pandas as pd
 import plotly.express as px
 import json
 import os
+from dotenv import load_dotenv
+    
+load_dotenv()
 
 # Configuración de la API Key
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(
+    api_key = os.environ.get("OPENAI_API_KEY"),
+)
 
 # Función para hacer la consulta a OpenAI
 def get_openai_response(question, json_data):
@@ -20,7 +26,8 @@ def get_openai_response(question, json_data):
         ]
         chat_history.append({"role": "user", "content": question})
 
-        response = openai.ChatCompletion.create(
+
+        response = client.chat.completions.create(
             model="gpt-4o-mini",
             messages=chat_history,
             temperature=0,
@@ -30,7 +37,7 @@ def get_openai_response(question, json_data):
             presence_penalty=0
         )
         
-        return response.choices[0].message['content'].strip()
+        return response.choices[0].message.content
 
     except Exception as e:
         st.error(f"Error al llamar a la API de OpenAI: {e}")
