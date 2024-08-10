@@ -1,17 +1,16 @@
 import streamlit as st
-import requests
+from datetime import datetime
 
 import json
 
 from utils_open_ai import get_openai_response
-from utils_gbif import search_data
 from utils_gbif import get_countries
+from utils_gbif import get_dataset_types
+from utils_gbif import search_data
+from utils_gbif import get_occurrences
 
 # Configuración de la página
 st.set_page_config(page_title="GBIF Data explorer", page_icon="🌍", layout="wide")
-
-# Título de la aplicación
-import streamlit as st
 
 st.title("GBIF EcoQuery Bot: A tool for dynamic interaction with GBIF biodiversity data. 🧉")
 
@@ -34,38 +33,19 @@ if submit_button and question:
     st.write(f"Your question: {question}")
     st.write(f"Answer: {answer}")
 
-def get_occurrences(dataset_key):
-
-    url = "https://api.gbif.org/v1/occurrence/search"
-    params = {"datasetKey": dataset_key}
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
-        data = response.json()
-        if 'results' in data and data['results']:
-            with open('ocurrencias.json', 'w') as f:
-                json.dump(data, f, indent=4)  # Guardar con indentación para mejor legibilidad
-            st.session_state.json = data
-            st.success("You can now chat with the dataset information!")
-
-        else:
-            st.error("No data was found for the selected parameters.")
-    else:
-        st.error(f"Request error: {response.status_code} - {response.text}")
-
-
 # Inicializar st.session_state
 if 'json' not in st.session_state:
     st.session_state.json = None
 
 # Entradas para los parámetros de búsqueda en la barra lateral
-paises = get_countries()
 st.sidebar.header("Search parameters")
-country = st.sidebar.selectbox("Country code", options=paises)
+country = st.sidebar.selectbox("Country code", options=get_countries())
+dataset_type = st.sidebar.selectbox("Dataset type", options=get_dataset_types())
 text_field = st.sidebar.text_input("Search text")
 
 # Botón para ejecutar la búsqueda
 if st.sidebar.button("Search"):
-    results = search_data(country, text_field)
+    results = search_data(country, text_field, dataset_type)
     if results:
         st.session_state.json = results
         with open("datasets.json", 'w') as f:
@@ -80,11 +60,21 @@ if st.session_state.json is not None:
 
     for idx, row in enumerate(datasets):
         if idx % 3 == 0:  # Crear una nueva fila cada 3 elementos
+            if idx != 0:
+                st.markdown("<hr>", unsafe_allow_html=True)  # Agrega una línea horizontal entre filas
+
             cols = st.columns(3)
         
         with cols[idx % 3]:
-            st.write(f"**Title: {row['title']}**")
+            created_date = datetime.fromisoformat(row['created']).strftime("%B %d, %Y at %I:%M %p")
+            modified_date = datetime.fromisoformat(row['modified']).strftime("%B %d, %Y at %I:%M %p")
+
+
+            st.write(f"**Title:** *{row['title']}*")
+            st.write(f"**Created at:** {created_date}")
+            st.write(f"**Last modified:** {modified_date}")
+
             st.markdown(f"[DOI: {row['doi']}](https://doi.org/{row['doi']})")
             
-            if st.button("🤖 Ask about this occurrences", key=row['key']):
+            if st.button("🤖 Ask about this data", key=row['key']):
                 get_occurrences(row['key'])
