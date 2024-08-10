@@ -6,18 +6,18 @@ client = OpenAI(
     api_key=st.secrets["OPENAI_API_KEY"],
 )
 
-def get_openai_response(question, df):
+def get_openai_response(question, json):
     try:
-        json_data = df.to_json(orient='records')
 
         # Define el contexto del mensaje
         chat_history = [
-            {"role": "system", "content": "Eres un bot útil, siempre respondes en español."},
-            {"role": "system", "content": "Tienes un archivo JSON con el siguiente contenido: "},
-            {"role": "system", "content": f"{json_data[:100000]}"}  # Limita la longitud del JSON para evitar errores
+            {"role": "system", "content": "You are an assistant bot specialized in interpreting and providing information from a JSON file related to species and biodiversity data from the GBIF portal. Always respond in English."},
+            {"role": "system", "content": "You have access to a JSON file with the following content: "},
+            {"role": "system", "content": f"{json}"},
+            {"role": "system", "content": "If the JSON file is empty, respond by saying that a search must be performed first."}  # Limita la longitud del JSON para evitar errores
         ]
-        chat_history.append({"role": "user", "content": question})
 
+        chat_history.append({"role": "user", "content": question})
 
         response = client.chat.completions.create(
             model="gpt-4o-mini",

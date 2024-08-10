@@ -1,111 +1,90 @@
 import streamlit as st
 import requests
-import pandas as pd
 
-from utils import get_openai_response
+import json
+
+from utils_open_ai import get_openai_response
+from utils_gbif import search_data
+from utils_gbif import get_countries
 
 # Configuración de la página
-st.set_page_config(page_title="Explorador de Datasets de GBIF", page_icon="🌍", layout="wide")
+st.set_page_config(page_title="GBIF Data explorer", page_icon="🌍", layout="wide")
 
 # Título de la aplicación
-st.title("🧉 Explorador de Datasets de GBIF")
+import streamlit as st
 
-@st.cache
-def obtener_paises():
-    url = 'https://raw.githubusercontent.com/gustavomarcelonunez/gbif-url/main/countries.csv'
-    countries_df = pd.read_csv(url)
-    country_codes = countries_df['code'].tolist()
-    return country_codes
+st.title("GBIF EcoQuery Bot: A tool for dynamic interaction with GBIF biodiversity data. 🧉")
 
-@st.cache
-def buscar_datos(country, text_field, limit, year_range):
-    url = "https://api.gbif.org/v1/dataset"
-    params = {
-        "country": country,
-        "limit": limit,
-        "q": text_field,
-        "type": "OCCURRENCE"
-    }
-    response = requests.get(url, params=params)
-    if response.status_code == 200:
-        data = response.json()
-        if 'results' in data and data['results']:
-            return data['results']
-        else:
-            st.error("No se encontraron datos para los parámetros seleccionados.")
-            return None
-    else:
-        st.error(f"Error en la solicitud: {response.status_code} - {response.text}")
-        return None
+st.header("Ask to EcoQuery Bot")
+st.write("To inquire about datasets, perform a search first and then consult. To ask about a specific dataset, select one from the results and consult here.")
 
-def obtener_ocurrencias(dataset_key):
+
+if "json" not in st.session_state:
+    st.session_state.json = None
+
+with st.form(key='my_form'):
+    question = st.text_input("Ask here:")
+    
+    submit_button = st.form_submit_button(label="Send")
+
+if submit_button and question:
+    # Obtener la respuesta del modelo OpenAI
+    answer = get_openai_response(question, st.session_state.json)
+    # Mostrar la respuesta del LLM
+    st.write(f"Your question: {question}")
+    st.write(f"Answer: {answer}")
+
+def get_occurrences(dataset_key):
+
     url = "https://api.gbif.org/v1/occurrence/search"
     params = {"datasetKey": dataset_key}
     response = requests.get(url, params=params)
     if response.status_code == 200:
         data = response.json()
         if 'results' in data and data['results']:
-            st.session_state.df = pd.json_normalize(data['results'])
-            st.session_state.show_chat = True
+            with open('ocurrencias.json', 'w') as f:
+                json.dump(data, f, indent=4)  # Guardar con indentación para mejor legibilidad
+            st.session_state.json = data
+            st.success("You can now chat with the dataset information!")
+
         else:
-            st.error("No se encontraron datos para los parámetros seleccionados.")
+            st.error("No data was found for the selected parameters.")
     else:
-        st.error(f"Error en la solicitud: {response.status_code} - {response.text}")
+        st.error(f"Request error: {response.status_code} - {response.text}")
+
 
 # Inicializar st.session_state
-if 'df' not in st.session_state:
-    st.session_state.df = None
-if 'show_chat' not in st.session_state:
-    st.session_state.show_chat = False
+if 'json' not in st.session_state:
+    st.session_state.json = None
 
 # Entradas para los parámetros de búsqueda en la barra lateral
-paises = obtener_paises()
-st.sidebar.header("Parámetros de Búsqueda")
-country = st.sidebar.selectbox("Código del país", options=paises)
-text_field = st.sidebar.text_input("Texto de búsqueda")
-limit = st.sidebar.number_input("Límite de registros", value=50, min_value=1, max_value=10000)
-year_range = st.sidebar.slider("Rango de Años", 1900, 2023, (2000, 2023))
+paises = get_countries()
+st.sidebar.header("Search parameters")
+country = st.sidebar.selectbox("Country code", options=paises)
+text_field = st.sidebar.text_input("Search text")
 
 # Botón para ejecutar la búsqueda
-if st.sidebar.button("Buscar"):
-    results = buscar_datos(country, text_field, limit, year_range)
+if st.sidebar.button("Search"):
+    results = search_data(country, text_field)
     if results:
-        st.session_state.df = pd.json_normalize(results)
-        st.session_state.show_chat = False
+        st.session_state.json = results
+        with open("datasets.json", 'w') as f:
+            json.dump(results, f, indent=4)
 
-if st.session_state.df is not None and not st.session_state.show_chat:
-    st.header("Datasets recuperados")
-    for idx, row in st.session_state.df.iterrows():
-        st.write(f"**{row['title']}**")
-        st.write(f"Ocurrencias: {row['numConstituents']}")
-        st.write(f"Dataset Key: {row['key']}")  # Imprime el valor de la clave
+if st.session_state.json is not None:
+    st.header("Recovered Datasets")
+    st.write("Showing maximum 9 results...")
 
-        if st.button("Consultar datos", key=row['key']):
-            obtener_ocurrencias(row['key'])
+    with open('datasets.json', 'r') as f:
+        datasets = json.load(f)   
 
-# Selector de página
-st.sidebar.markdown("---")
-page = st.sidebar.selectbox("Selecciona una vista", ["Explorador de Datos", "Chat"])
-
-# Mostrar la vista adecuada
-if page == "Chat" or st.session_state.show_chat:
-    st.header("Chat con LLM")
-
-    if st.session_state.df is None:
-        st.error("Realice primero una búsqueda.")
-    else:
-        question = st.text_input("Escribe tu pregunta aquí:")
-
-        if question and st.button("Enviar"):
-            # Obtener la respuesta del modelo OpenAI
-            answer = get_openai_response(question, st.session_state.df)
-            # Mostrar la respuesta del LLM
-            st.write(f"Tu pregunta: {question}")
-            st.write(answer)
-
-# Footer
-st.markdown("""
-    <div style="text-align: center; padding: 20px;">
-        Explorador de Datos de GBIF | Desarrollado por [Tu Nombre]
-    </div>
-    """, unsafe_allow_html=True)
+    for idx, row in enumerate(datasets):
+        if idx % 3 == 0:  # Crear una nueva fila cada 3 elementos
+            cols = st.columns(3)
+        
+        with cols[idx % 3]:
+            st.write(f"**Title: {row['title']}**")
+            st.markdown(f"[DOI: {row['doi']}](https://doi.org/{row['doi']})")
+            
+            if st.button("🤖 Ask about this occurrences", key=row['key']):
+                get_occurrences(row['key'])
