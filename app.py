@@ -8,14 +8,14 @@ from utils_gbif import get_countries
 from utils_gbif import get_dataset_types
 from utils_gbif import search_data
 from utils_gbif import get_occurrences
-from disclaimer_popup import show_disclaimer_sidebar
+from disclaimer_popup import show_disclaimer_popup
 
 # Configuración de la página
 st.set_page_config(page_title="GBIF Data explorer", page_icon="🌍", layout="wide")
 
 st.title("GBIF EcoQuery Bot: A tool for dynamic interaction with GBIF biodiversity data. 🧉")
 
-show_disclaimer_sidebar()
+show_disclaimer_popup()
 
 
 st.header("Ask to EcoQuery Bot")
