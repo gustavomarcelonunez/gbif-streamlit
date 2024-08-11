@@ -15,9 +15,6 @@ st.set_page_config(page_title="GBIF Data explorer", page_icon="🌍", layout="wi
 
 st.title("GBIF EcoQuery Bot: A tool for dynamic interaction with GBIF biodiversity data. 🧉")
 
-show_disclaimer_popup()
-
-
 st.header("Ask to EcoQuery Bot")
 st.write("To inquire about datasets, perform a search first and then consult. To ask about a specific dataset, select one from the results and consult here.")
 
@@ -55,6 +52,8 @@ if st.sidebar.button("Search"):
         with open("datasets.json", 'w') as f:
             json.dump(results, f, indent=4)
 
+if st.sidebar.button('Three cheers'):
+        show_disclaimer_popup()
 
 
 if st.session_state.json is not None:
