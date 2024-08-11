@@ -52,7 +52,7 @@ if st.sidebar.button("Search"):
         with open("datasets.json", 'w') as f:
             json.dump(results, f, indent=4)
 
-if st.sidebar.button('Three cheers'):
+if st.sidebar.button('Disclaimer'):
         show_disclaimer_popup()
 
 
