@@ -21,6 +21,7 @@ def show_disclaimer_sidebar():
         )
         if st.button("Close Disclaimer"):
             st.session_state.show_disclaimer = False
+            show_disclaimer_sidebar()
 
 # Llamada al método principal desde el archivo principal de la app
-show_disclaimer_sidebar()
+
