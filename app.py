@@ -8,11 +8,15 @@ from utils_gbif import get_countries
 from utils_gbif import get_dataset_types
 from utils_gbif import search_data
 from utils_gbif import get_occurrences
+from disclaimer_popup import show_disclaimer_sidebar
 
 # Configuración de la página
 st.set_page_config(page_title="GBIF Data explorer", page_icon="🌍", layout="wide")
 
 st.title("GBIF EcoQuery Bot: A tool for dynamic interaction with GBIF biodiversity data. 🧉")
+
+show_disclaimer_sidebar()
+
 
 st.header("Ask to EcoQuery Bot")
 st.write("To inquire about datasets, perform a search first and then consult. To ask about a specific dataset, select one from the results and consult here.")
@@ -50,6 +54,8 @@ if st.sidebar.button("Search"):
         st.session_state.json = results
         with open("datasets.json", 'w') as f:
             json.dump(results, f, indent=4)
+
+
 
 if st.session_state.json is not None:
     st.header("Recovered Datasets")
