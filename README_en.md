@@ -1,6 +1,6 @@
 
 # BotGBIF - Biodiversity Chatbot with LLM and GBIF API
-![BotGbif](https://raw.githubusercontent.com/disenodc/gbif-streamlit/main/botgbif.png)
+![Botgbif_header](https://raw.githubusercontent.com/disenodc/gbif-streamlit/main/repo-header.jpg)
 
 This project implements a chatbot that allows users to make biodiversity-related queries using an LLM (Large Language Model) to interact with the GBIF (Global Biodiversity Information Facility) API. The application is built with Python and Streamlit, providing a simple and effective interface for exploring biodiversity data.
 
