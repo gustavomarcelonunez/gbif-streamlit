@@ -6,7 +6,7 @@ This project implements a chatbot that allows users to make biodiversity-related
 
 
 ## Authors
-The three authors of the project work in research at [CESIMAR - CENPAT](https://cesimar.conicet.gov.ar/) CENTRO PARA EL ESTUDIO DE SISTEMAS MARINOS - [CCT CENPAT](https://cenpat.conicet.gov.ar/) CENTRO CIENTIFICO TECNOLOGICO CONICET - CENTRO NACIONAL PATAGONICO - [CONICET](https://www.conicet.gov.ar/) CONSEJO NACIONAL DE INVESTIGACIONES CIENTIFICAS Y TECNICAS 
+Authors belong to Centro para el Estudio de Sistemas Marinos (Consejo Nacional de Investigaciones Científicas y Técnicas [CESIMAR-CONICET](https://cesimar.conicet.gov.ar/) - Boulevard Brown 2915 - Puerto Madryn (U9120ACD) - Chubut - Argentina
 
 - Ph.D.: Marcos Zárate
 - BCS.: Dario Ceballos 
