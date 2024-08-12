@@ -8,7 +8,7 @@ from disclaimer_popup import show_disclaimer_popup
 # Configuración de la página
 st.set_page_config(page_title="BotGBIF", page_icon="🧉", layout="wide")
 
-st.title("BotGBIF: A tool for dynamic interaction with GBIF data. 🧉")
+st.title("BotGBIF: A tool to query GBIF data in natural language. Made in AR 🧉")
 st.header("Ask to BotGBIF")
 st.write("To ask about datasets, perform a search first and then consult. To ask about a specific dataset, select one from the results and chat! 😎")
 
