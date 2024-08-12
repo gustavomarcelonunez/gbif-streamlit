@@ -10,7 +10,7 @@ st.set_page_config(page_title="BotGBIF", page_icon="🧉", layout="wide")
 
 st.title("BotGBIF: A tool for dynamic interaction with GBIF data. 🧉")
 st.header("Ask to BotGBIF")
-st.write("To inquire about datasets, perform a search first and then consult. To ask about a specific dataset, select one from the results and consult here.")
+st.write("To ask about datasets, perform a search first and then consult. To ask about a specific dataset, select one from the results and chat! 😎")
 
 # Inicializa el estado
 if "json" not in st.session_state:
