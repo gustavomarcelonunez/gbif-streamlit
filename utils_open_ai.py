@@ -9,13 +9,16 @@ client = OpenAI(
 def get_openai_response(question, json):
     try:
 
-        # Define el contexto del mensaje
+        # Aclarar tema del archivo vacio de entrada
         chat_history = [
-            {"role": "system", "content": "You are an assistant bot specialized in interpreting and providing information from a JSON file related to species and biodiversity data from the GBIF portal. Always respond in English."},
+            {"role": "system", "content": "You are an assistant bot specialized in interpreting and providing information from a JSON file related to species and biodiversity data from the GBIF portal. Always respond in English, and you ONLY responde about this information."},
             {"role": "system", "content": "You have access to a JSON file with the following content: "},
             {"role": "system", "content": f"{json}"},
-            {"role": "system", "content": "If the JSON file is empty, respond by saying that a search must be performed first."}  # Limita la longitud del JSON para evitar errores
+            {"role": "system", "content": "If the JSON file is empty, respond by saying that a search must be performed first at sidebar."}  # Limita la longitud del JSON para evitar errores
         ]
+
+        if "selected_dataset_title" in st.session_state:
+            chat_history.append({"role": "system", "content": f"The selected dataset title is: {st.session_state.selected_dataset_title}"})
 
         chat_history.append({"role": "user", "content": question})
 

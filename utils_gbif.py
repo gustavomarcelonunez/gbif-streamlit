@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 import json
 
-@st.cache(suppress_st_warning=True)
+@st.cache_resource
 def get_countries():
     url = 'https://raw.githubusercontent.com/gustavomarcelonunez/gbif-url/main/countries.csv'
     countries_df = pd.read_csv(url)
