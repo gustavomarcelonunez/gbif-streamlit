@@ -15,30 +15,27 @@ st.write("To ask about datasets, perform a search first and then consult. To ask
 # Inicializa el estado
 if "json" not in st.session_state:
     st.session_state.json = None
-    st.session_state.prompt_msg = "Ask here:"  # Inicializa el prompt_msg aquí
 
 # Entradas para los parámetros de búsqueda en la barra lateral
 st.sidebar.header("Search parameters")
-country = st.sidebar.selectbox("Country code", options=get_countries())
+
+country_dict = get_countries()
+country_name = st.sidebar.selectbox("Country", options=list(country_dict.keys()))
 dataset_type = st.sidebar.selectbox("Dataset type", options=get_dataset_types())
-text_field = st.sidebar.text_input("Search text")
+text_field = st.sidebar.text_input("Full text search (simple word or a phrase, wildcards are not supported)")
 
 # Botón para ejecutar la búsqueda
 if st.sidebar.button("Search"):
-    results = search_data(country, text_field, dataset_type)
+    results = search_data(country_dict[country_name], text_field, dataset_type)
     if results:
         st.session_state.selected_dataset_title = None
 
         st.session_state.json = results
         with open("datasets.json", 'w') as f:
             json.dump(results, f, indent=4)
-        st.session_state.prompt_msg = "Ask about recovered Datasets Metadata:"
+        st.session_state.prompt_msg = "Ask about recovered Datasets Metadata"
     else:
         st.session_state.json = None
-        st.session_state.prompt_msg = "Ask here:"
-
-# Verifica si hay datos cargados para definir el mensaje inicial
-prompt_msg = st.session_state.prompt_msg
 
 if st.sidebar.button('Disclaimer'):
     show_disclaimer_popup()
@@ -71,17 +68,18 @@ if st.session_state.json:
 
             if st.button("🤖 Ask about this data", key=row['key']):
                 st.session_state.selected_dataset_title = row['title']
-                st.session_state.prompt_msg = f"Ask about selected dataset: {row['title']}"
+                st.session_state.prompt_msg = f"Ask about selected Dataset: *{row['title']}*"
                 # También puedes cargar los datos del dataset seleccionado
                 get_occurrences(row['key'])
                 st.rerun()
     
     st.markdown("<hr>", unsafe_allow_html=True)
+    st.subheader(st.session_state.prompt_msg)
 
             
 
 # Muestra el prompt con el mensaje adecuado
-question = st.chat_input(prompt_msg)
+question = st.chat_input("Ask here:")
 
 if question:
     # Obtener la respuesta del modelo OpenAI
