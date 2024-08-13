@@ -13,6 +13,8 @@ Authors belong to Centro para el Estudio de Sistemas Marinos (Consejo Nacional d
 - BCS.: Dario Ceballos 
 - BCS.: Gustavo Nuñez 
 
+## Agent Rol Definition
+For the project was develope a GBIF Agent with the follow specifications: an assistant bot specialized in interpreting and providing information from a JSON file related to species and biodiversity data from the GBIF portal. Always respond in English, and you ONLY responde about this information.
 
 ## Table of Contents
 
