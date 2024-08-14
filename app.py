@@ -4,6 +4,7 @@ import json
 from utils_open_ai import get_openai_response
 from utils_gbif import get_countries, get_dataset_types, search_data, get_occurrences
 from disclaimer_popup import show_disclaimer_popup
+from video_popup import show_video
 
 # Configuración de la página
 st.set_page_config(page_title="BotGBIF", page_icon="🧉", layout="wide")
@@ -41,9 +42,7 @@ if st.sidebar.button('Disclaimer'):
     show_disclaimer_popup()
 
 if st.sidebar.button("Watch demo"):
-    video_file = open("BotGBIF-DEMO.mp4", "rb")
-    video_bytes = video_file.read()
-    st.video(video_bytes)
+    show_video()
 
 
 if st.session_state.json:
