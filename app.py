@@ -40,7 +40,11 @@ if st.sidebar.button("Search"):
 if st.sidebar.button('Disclaimer'):
     show_disclaimer_popup()
 
-st.sidebar.button("Watch demo")
+if st.sidebar.button("Watch demo"):
+    video_file = open("BotGBIF-DEMO.mp4", "rb")
+    video_bytes = video_file.read()
+    st.video(video_bytes)
+
 
 if st.session_state.json:
     st.header("Recovered Datasets")
