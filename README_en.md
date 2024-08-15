@@ -74,7 +74,7 @@ biodiversity-chatbot/
 
 ## Project Pipeline
 
-![Project Pipeline Diagram](https://raw.githubusercontent.com/disenodc/gbif-streamlit/main/botgbif.png)
+![Project Pipeline Diagram]([https://raw.githubusercontent.com/disenodc/gbif-streamlit/main/botgbif.png](https://raw.githubusercontent.com/disenodc/gbif-streamlit/main/gbif-bot-header.png))
 
 1. **User Query Input:**
    - The user enters a biodiversity-related query in the Streamlit interface.
