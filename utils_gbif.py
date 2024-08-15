@@ -7,7 +7,18 @@ import json
 def get_countries():
     url = 'https://raw.githubusercontent.com/gustavomarcelonunez/gbif-url/main/countries.csv'
     countries_df = pd.read_csv(url)
-    country_dict = dict(zip(countries_df['country'], countries_df['code']))
+    
+    # Diccionario para almacenar nombre del país, código y el emoji
+    country_dict = {}
+    
+    for index, row in countries_df.iterrows():
+        country_name = row['country']
+        country_code = row['code']
+        # Convertir el código de país a la bandera usando emojis
+        flag_emoji = row['icon']
+        # Almacenar en el diccionario
+        country_dict[f"{flag_emoji} - {country_name}"] = country_code
+    
     return country_dict
 
 def get_dataset_types():
