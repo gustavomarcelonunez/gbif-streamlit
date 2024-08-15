@@ -17,7 +17,6 @@ def search_data(country, text_field, dataset_type):
     url = "https://api.gbif.org/v1/dataset"
     params = {
         "country": country,
-        "limit": 9,
         "q": text_field,
         "type": dataset_type
     }
@@ -29,10 +28,12 @@ def search_data(country, text_field, dataset_type):
         else:
             st.error("No data was found for the selected parameters.")
             return None
+    elif response.status_code == 500:
+        st.error(f"Request error: {response.status_code} - GBIF Internal Server Error")
+        return None
     else:
         st.error(f"Request error: {response.status_code} - {response.text}")
         return None
-    
 def get_occurrences(dataset_key):
 
     url = "https://api.gbif.org/v1/occurrence/search"
