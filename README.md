@@ -39,7 +39,7 @@ Before starting, make sure you have the following components installed:
 Clone this repository and install the necessary dependencies:
 
 ```bash
-git clone https://github.com/yourusername/botgbif.git
+git clone https://github.com/gustavomarcelonunez/gbif-streamlit.git
 cd botgbif
 pip install -r requirements.txt
 ```
