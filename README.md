@@ -32,7 +32,7 @@ Before starting, make sure you have the following components installed:
 - Python 3.8 or higher
 - [pip](https://pip.pypa.io/en/stable/) for managing Python packages
 - An account on [OpenAI](https://openai.com/) to access the GPT API
-- Access to the [GBIF API](https://www.gbif.org/developer/summary) (API key is not required for most queries)
+- Access to the [GBIF API](https://www.gbif.org/developer/summary) (API key is not required)
 
 ## Installation
 
