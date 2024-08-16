@@ -70,7 +70,7 @@ The main structure of the project is as follows:
 
 ## Project Pipeline
 
-![Project Pipeline Diagram](https://raw.githubusercontent.com/disenodc/gbif-streamlit/main/botgbif.png)
+![Project Pipeline Diagram](funkos/botgbif.png)
 
 1. **User Query Input:**
    - The user enters a biodiversity-related query in the Streamlit interface.
