@@ -1,5 +1,4 @@
 
-
 # BotGBIF🤖 - Biodiversity Chatbot with LLM and GBIF API
 ![Botgbif_header](https://raw.githubusercontent.com/disenodc/gbif-streamlit/main/repo-header.jpg)
 
@@ -8,10 +7,6 @@ This project implements a chatbot that allows users to make biodiversity-related
 
 ## Authors
 Authors belong to Centro para el Estudio de Sistemas Marinos (Consejo Nacional de Investigaciones Científicas y Técnicas [CESIMAR-CONICET](https://cesimar.conicet.gov.ar/) - Boulevard Brown 2915 - Puerto Madryn (U9120ACD) - Chubut - Argentina
-
-
-|![alt text](funkos/funko-marcos-150x150.jpg "Marcos Zárate")|![alt text](funkos/funko-dario-150x150.jpg "Dario Ceballos")|![alt text](funkos/funko-gustavo-150x150.jpg "Gustavo Nuñez")|
-| Ph.D.: Marcos Zárate | BCS.: Dario Ceballos | BCS.: Gustavo Nuñez |
 
 - Ph.D.: Marcos Zárate
 - BCS.: Dario Ceballos 
@@ -38,14 +33,14 @@ Before starting, make sure you have the following components installed:
 - Python 3.8 or higher
 - [pip](https://pip.pypa.io/en/stable/) for managing Python packages
 - An account on [OpenAI](https://openai.com/) to access the GPT API
-- Access to the [GBIF API](https://www.gbif.org/developer/summary) (API key is not required)
+- Access to the [GBIF API](https://www.gbif.org/developer/summary) (API key is not required for most queries)
 
 ## Installation
 
 Clone this repository and install the necessary dependencies:
 
 ```bash
-git clone https://github.com/gustavomarcelonunez/gbif-streamlit.git
+git clone https://github.com/yourusername/botgbif.git
 cd botgbif
 pip install -r requirements.txt
 ```
@@ -66,6 +61,8 @@ To configure the required API keys, follow these steps:
 The main structure of the project is as follows:
 
 ```plaintext
+biodiversity-chatbot/
+│
 ├── app.py              # Main Streamlit application file
 ├── requirements.txt    # Project dependencies list
 ├── disclaimer_popup.py # Project disclaimer demo except
@@ -76,25 +73,26 @@ The main structure of the project is as follows:
 ```
 
 ## Project Pipeline
-![Project Pipeline Diagram](funkos/botgbif.png)
 
 ![Project Pipeline Diagram](https://raw.githubusercontent.com/disenodc/gbif-streamlit/main/gbif-bot.png)
-
 
 1. **User Query Input:**
    - The user enters a biodiversity-related query in the Streamlit interface.
 
-2. **Querying the GBIF API:**
-   - The user's query is sent to the GBIF API, and returns metadata that meet the search criteria.
+2. **Processing with LLM:**
+   - The user's query is sent to the GBIF API to be appropriately reformulated or interpreted.
 
-3. **Displaying Results:**
+3. **Querying the GBIF API:**
+   - The result of the query return metadata that meet the search criteria to the BotGBIF developed upon LLM OpenAI API, searching for relevant data or related information.
+
+4. **Displaying Results:**
    - The processed data from the GBIF API is presented to the user through the Streamlit interface.
 
-4. **Asking about datasets metadata:**
-   - The user can ask in natural language to the BotGBIF about the datasets related through the Streamlit interface.
+5. **Asking about datasets:**
+   - The user can ask in natural language to the Bot GBIF about the datasets related through the Streamlit interface.
 
-5. **Asking about a data:**
-   - The user select one specific dataset to ask in natural language for information about the dataset content through the Streamlit interface.
+6. **Asking about datasets:**
+   - The user select one specific dataset to ask in natural language for information about the ocurrences through the Streamlit interface.
 
 
 ## Running the Application
