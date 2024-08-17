@@ -1,60 +1,89 @@
 import streamlit as st
-import requests
-import pandas as pd
-import plotly.express as px
+from datetime import datetime
+import json
+from utils_open_ai import get_openai_response
+from utils_gbif import get_countries, get_dataset_types, search_data, get_occurrences
+from disclaimer_popup import show_disclaimer_popup
 
-# Título de la aplicación
-st.title("Explorador de Datos de GBIF")
+# Configuración de la página
+st.set_page_config(page_title="BotGBIF", page_icon="🧉", layout="wide")
 
-# Entradas para los parámetros de búsqueda
-st.sidebar.header("Parámetros de Búsqueda")
-country = st.sidebar.text_input("Código del país (ej. ES)")
-limit = st.sidebar.number_input("Límite de registros", value=100)
-year_range = st.sidebar.slider("Rango de Años", 1900, 2023, (2000, 2023))
-#taxon_key = st.sidebar.text_input("Taxón (ID del taxón)")
+st.title("BotGBIF: A tool to query GBIF data in natural language. 🧉")
+st.header("Ask to BotGBIF")
+st.write("To ask about datasets, perform a search first and then consult. To ask about a specific dataset, select one from the results and chat! 😎")
+
+# Inicializa el estado
+if "json" not in st.session_state:
+    st.session_state.json = None
+
+# Entradas para los parámetros de búsqueda en la barra lateral
+st.sidebar.header("Search parameters")
+
+country_dict = get_countries()
+country_name = st.sidebar.selectbox("Country", options=list(country_dict.keys()))
+dataset_type = st.sidebar.selectbox("Dataset type", options=get_dataset_types())
+text_field = st.sidebar.text_input("Full text search (simple word or a phrase, wildcards are not supported)")
 
 # Botón para ejecutar la búsqueda
-if st.sidebar.button("Buscar"):
-    url = "https://api.gbif.org/v1/occurrence/search"
-    params = {
-        "country": country,
-        "limit": limit,
-        "year": ",".join(map(str, range(year_range[0], year_range[1] + 1))),
-        #"taxonKey": taxon_key
-    }
-    response = requests.get(url, params=params)
+if st.sidebar.button("Search"):
+    results = search_data(country_dict[country_name], text_field, dataset_type)
+    if results:
+        st.session_state.selected_dataset_title = None
 
-    if response.status_code == 200:
-        data = response.json()
-        if 'results' in data and data['results']:
-            df = pd.json_normalize(data['results'])
-
-            st.header("Mapa de Distribución de Especies")
-            fig = px.scatter_geo(df,
-                                 lat='decimalLatitude',
-                                 lon='decimalLongitude',
-                                 hover_name='species',
-                                 title='Distribución de Especies (GBIF)')
-            st.plotly_chart(fig)
-
-            st.header("Datos de Especies")
-            st.write(df.head(10))  # Mostrar hasta 10 filas
-
-            st.header("Estadísticas de Ocurrencias")
-            st.write(df.describe())
-        else:
-            st.error("No se encontraron datos para los parámetros seleccionados.")
+        st.session_state.json = results
+        with open("datasets.json", 'w') as f:
+            json.dump(results, f, indent=4)
+        st.session_state.prompt_msg = "Ask about recovered Datasets Metadata"
     else:
-        st.error("Error en la solicitud")
+        st.session_state.json = None
 
-# Opción para descargar los datos
-if st.sidebar.button("Descargar Datos"):
-    if 'df' in locals():
-        st.sidebar.download_button(
-            label="Descargar CSV",
-            data=df.to_csv().encode('utf-8'),
-            file_name='datos_gbif.csv',
-            mime='text/csv'
-        )
-    else:
-        st.sidebar.warning("Primero realiza una búsqueda para descargar los datos.")
+if st.sidebar.button('Disclaimer'):
+    show_disclaimer_popup()
+
+st.sidebar.button("Watch demo")
+
+if st.session_state.json:
+    st.header("Recovered Datasets")
+    st.write("Showing maximum 9 results...")
+
+    with open('datasets.json', 'r') as f:
+        datasets = json.load(f)
+
+    for idx, row in enumerate(datasets):
+        if idx % 3 == 0:  # Crear una nueva fila cada 3 elementos
+            if idx != 0:
+                st.markdown("<hr>", unsafe_allow_html=True)  # Agrega una línea horizontal entre filas
+
+            cols = st.columns(3)
+
+        with cols[idx % 3]:
+            created_date = datetime.fromisoformat(row['created']).strftime("%B %d, %Y at %I:%M %p")
+            modified_date = datetime.fromisoformat(row['modified']).strftime("%B %d, %Y at %I:%M %p")
+
+            st.write(f"**Title:** *{row['title']}*")
+            st.write(f"**Created at:** {created_date}")
+            st.write(f"**Last modified:** {modified_date}")
+
+            st.markdown(f"[DOI: {row['doi']}](https://doi.org/{row['doi']})")
+
+            if st.button("🤖 Ask about this data", key=row['key']):
+                st.session_state.selected_dataset_title = row['title']
+                st.session_state.prompt_msg = f"Ask about selected Dataset: *{row['title']}*"
+                # También puedes cargar los datos del dataset seleccionado
+                get_occurrences(row['key'])
+                st.rerun()
+    
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.subheader(st.session_state.prompt_msg)
+
+            
+
+# Muestra el prompt con el mensaje adecuado
+question = st.chat_input("Ask here:")
+
+if question:
+    # Obtener la respuesta del modelo OpenAI
+    answer = get_openai_response(question, st.session_state.json)
+    # Mostrar la respuesta del LLM
+    st.write(f"Your question: {question}")
+    st.write(f"Answer: {answer}")
