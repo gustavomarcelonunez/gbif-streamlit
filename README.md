@@ -1,7 +1,7 @@
 
 
 # BotGBIF🤖 - Biodiversity Chatbot with LLM and GBIF API
-![Botgbif_header](https://raw.githubusercontent.com/disenodc/gbif-streamlit/main/repo-header.jpg)
+![Botgbif_header](images/repo-header.jpg)
 
 This project implements a chatbot that allows users to make biodiversity-related queries using an LLM (Large Language Model) to interact with the GBIF (Global Biodiversity Information Facility) API. The application is built with Python and Streamlit, providing a simple and effective interface for exploring biodiversity data.
 
@@ -10,7 +10,7 @@ This project implements a chatbot that allows users to make biodiversity-related
 Authors belong to Centro para el Estudio de Sistemas Marinos (Consejo Nacional de Investigaciones Científicas y Técnicas [CESIMAR-CONICET](https://cesimar.conicet.gov.ar/) - Boulevard Brown 2915 - Puerto Madryn (U9120ACD) - Chubut - Argentina
 
 
-![alt text](funkos/funko-marcos-150x150.jpg "Marcos Zárate") ![alt text](funkos/funko-dario-150x150.jpg "Dario Ceballos") ![alt text](funkos/funko-gustavo-150x150.jpg "Gustavo Nuñez")
+![alt text](images/funko-marcos-150x150.jpg "Marcos Zárate") ![alt text](images/funko-dario-150x150.jpg "Dario Ceballos") ![alt text](images/funko-gustavo-150x150.jpg "Gustavo Nuñez")
 
 - Ph.D.: Marcos Zárate
 - BCS.: Dario Ceballos 
@@ -75,7 +75,7 @@ The main structure of the project is as follows:
 ```
 
 ## Project Pipeline
-![Project Pipeline Diagram](funkos/botgbif.png)
+![Project Pipeline Diagram](images/botgbif.png)
 
 1. **User Query Input:**
    - The user enters a biodiversity-related query in the Streamlit interface.
