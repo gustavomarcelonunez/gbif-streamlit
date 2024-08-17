@@ -9,10 +9,9 @@ This project implements a chatbot that allows users to make biodiversity-related
 ## Authors
 Authors belong to Centro para el Estudio de Sistemas Marinos (Consejo Nacional de Investigaciones Científicas y Técnicas [CESIMAR-CONICET](https://cesimar.conicet.gov.ar/) - Boulevard Brown 2915 - Puerto Madryn (U9120ACD) - Chubut - Argentina
 
-- Ph.D.: Marcos Zárate
-- BCS.: Dario Ceballos 
-- BCS.: Gustavo Nuñez 
-
+|![alt text](funkos/funko-marcos-150x150.jpg "Marcos Zárate")|![alt text](funkos/funko-dario-150x150.jpg "Dario Ceballos")|![alt text](funkos/funko-gustavo-150x150.jpg "Gustavo Nuñez")|
+|---------------|----------------|---------------|
+| Ph.D.: Marcos Zárate | BCS.: Dario Ceballos | BCS.: Gustavo Nuñez |
 
 ## Table of Contents
 
@@ -70,8 +69,8 @@ The main structure of the project is as follows:
 ```
 
 ## Project Pipeline
+![Project Pipeline Diagram](funkos/botgbif.png)
 
-![Project Pipeline Diagram](https://raw.githubusercontent.com/disenodc/gbif-streamlit/main/gbif-bot.png)
 
 1. **User Query Input:**
    - The user enters a biodiversity-related query in the Streamlit interface.
