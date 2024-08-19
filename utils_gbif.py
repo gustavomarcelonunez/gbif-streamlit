@@ -28,6 +28,7 @@ def search_data(country, text_field, dataset_type):
     url = "https://api.gbif.org/v1/dataset"
     params = {
         "country": country,
+        "limit": 15,
         "q": text_field,
         "type": dataset_type
     }
