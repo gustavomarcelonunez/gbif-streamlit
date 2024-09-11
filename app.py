@@ -52,9 +52,6 @@ if st.sidebar.button("Search"):
     results = search_data(country_dict[st.session_state.country], st.session_state.text_field, st.session_state.dataset_type)
     if results:
         st.session_state.selected_dataset_title = None
-        st.session_state.json = results
-        with open("datasets.json", 'w') as f:
-            json.dump(results, f, indent=4)
         st.session_state.prompt_msg = "Ask about recovered Datasets Metadata"
     else:
         st.session_state.json = None
@@ -71,7 +68,7 @@ if st.session_state.json:
     with open('datasets.json', 'r') as f:
         datasets = json.load(f)
 
-    for idx, row in enumerate(datasets):
+    for idx, row in enumerate(datasets['results']):
         if idx % 3 == 0:  # Crear una nueva fila cada 3 elementos
             if idx != 0:
                 st.markdown("<hr>", unsafe_allow_html=True)  # Agrega una línea horizontal entre filas
